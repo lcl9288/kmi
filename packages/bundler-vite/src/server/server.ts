@@ -2,27 +2,27 @@ import {
   createHttpsServer,
   createProxy,
   resolveHttpsConfig,
-} from '@umijs/bundler-utils';
-import express from '@umijs/bundler-utils/compiled/express';
-import { getDevBanner, logger } from '@umijs/utils';
-import http from 'http';
+} from '@umijs/bundler-utils'
+import express from '@umijs/bundler-utils/compiled/express'
+import { getDevBanner, logger } from '@kmijs/shared'
+import http from 'http'
 import type {
   DepOptimizationMetadata,
   HmrContext,
   InlineConfig as ViteInlineConfig,
-} from '../../compiled/vite';
-import { createServer as createViteServer } from '../../compiled/vite';
-import type { IConfig } from '../types';
-import pluginOnHotUpdate from './plugins/onHotUpdate';
+} from '../../compiled/vite'
+import { createServer as createViteServer } from '../../compiled/vite'
+import type { IConfig } from '../types'
+import pluginOnHotUpdate from './plugins/onHotUpdate'
 
 interface IOpts {
-  cwd: string;
-  port?: number;
-  host?: string;
-  viteConfig: ViteInlineConfig;
-  userConfig: IConfig;
-  beforeMiddlewares?: any[];
-  afterMiddlewares?: any[];
+  cwd: string
+  port?: number
+  host?: string
+  viteConfig: ViteInlineConfig
+  userConfig: IConfig
+  beforeMiddlewares?: any[]
+  afterMiddlewares?: any[]
   /**
    * onDevCompileDone hook
    * @param args  includes 2 fields:
@@ -34,28 +34,36 @@ interface IOpts {
    *                  it would be the modules of HMR Context before each HMR is sent
    */
   onDevCompileDone?: (args: {
-    time: number;
-    isFirstCompile: boolean;
-    stats: HmrContext['modules'] | DepOptimizationMetadata;
-  }) => Promise<void> | void;
-  onBeforeMiddleware?: Function;
+    time: number
+    isFirstCompile: boolean
+    stats: HmrContext['modules'] | DepOptimizationMetadata
+  }) => Promise<void> | void
+  onBeforeMiddleware?: Function
 }
 
 export async function createServer(opts: IOpts): Promise<any> {
-  const startTms = +new Date();
-  const { viteConfig, userConfig, onDevCompileDone } = opts;
-  const app = express();
+  const startTms = +new Date()
+  const { viteConfig, userConfig, onDevCompileDone } = opts
+  const app = express()
 
-  const viteConfigServer = { ...viteConfig.server };
+  const viteConfigServer = { ...viteConfig.server }
+
+  logger.info('[debug] createServer called')
+  logger.info(
+    `[debug] incoming options: port=${String(opts.port || 8000)}, host=${String(
+      opts.host || '0.0.0.0',
+    )}, https=${Boolean(userConfig.https)}`,
+  )
 
   // 如果启用https 先获取key 和 cert 给vite ws 服务使用
   if (userConfig.https) {
-    const httpsConfig = await resolveHttpsConfig(userConfig.https);
+    const httpsConfig = await resolveHttpsConfig(userConfig.https)
     if (httpsConfig) {
       userConfig.https = viteConfigServer.https = {
         key: httpsConfig.key,
         cert: httpsConfig.cert,
-      };
+      }
+      logger.info('[debug] https config resolved and applied to vite & server')
     }
   }
 
@@ -66,28 +74,44 @@ export async function createServer(opts: IOpts): Promise<any> {
       ? {
           plugins: viteConfig.plugins!.concat([
             pluginOnHotUpdate(async (modules) => {
+              logger.info(
+                `[debug] onHotUpdate received: modules=${modules?.length ?? 0}`,
+              )
               await onDevCompileDone({
                 time: 0,
                 isFirstCompile: false,
                 stats: modules,
-              });
+              })
             }),
           ]),
         }
       : {}),
     server: { ...viteConfigServer, middlewareMode: true },
-  });
+  })
+
+  logger.info('[debug] vite dev server created (middleware mode)')
 
   // before middlewares
-  opts.beforeMiddlewares?.forEach((m) => app.use(m));
+  opts.beforeMiddlewares?.forEach((m) => app.use(m))
+  if (opts.beforeMiddlewares?.length) {
+    logger.info(
+      `[debug] beforeMiddlewares mounted: count=${opts.beforeMiddlewares.length}`,
+    )
+  }
 
   if (opts.onBeforeMiddleware) {
-    opts.onBeforeMiddleware(app);
+    logger.info('[debug] onBeforeMiddleware hook detected, invoking')
+    opts.onBeforeMiddleware(app)
   }
 
   // proxy
   if (userConfig.proxy) {
-    createProxy(userConfig.proxy, app);
+    logger.info(
+      `[debug] proxy enabled: routes=${Object.keys(userConfig.proxy).join(
+        ',',
+      )}`,
+    )
+    createProxy(userConfig.proxy, app)
   }
 
   // after middlewares, insert before vite spaFallbackMiddleware
@@ -101,19 +125,26 @@ export async function createServer(opts: IOpts): Promise<any> {
             // TODO: FIXME
             // see: https://github.com/umijs/umi/commit/34d4e4e26a20ff5c7393eab5d3db363cca541379#diff-3a996a9e7a2f94fc8f23c6efed1447eed9567e36ed622bd8547a58e5415087f7R164
             handle: app.use(m.toString().includes(`{ compiler }`) ? m({}) : m),
-          }));
+          }))
 
-        vite.middlewares.stack.splice(i, 0, ...afterStacks);
+        vite.middlewares.stack.splice(i, 0, ...afterStacks)
 
-        return true;
+        logger.info(
+          `[debug] afterMiddlewares inserted before spaFallback: count=${
+            opts.afterMiddlewares!.length
+          }`,
+        )
+
+        return true
       }
 
-      return false;
-    });
+      return false
+    })
   }
 
   // use vite via middleware way
-  app.use(vite.middlewares);
+  logger.info('[debug] mounting vite.middlewares to express app')
+  app.use(vite.middlewares)
 
   // writeToDisk(?)
   // mock
@@ -122,14 +153,21 @@ export async function createServer(opts: IOpts): Promise<any> {
 
   const server = userConfig.https
     ? await createHttpsServer(app, userConfig.https)
-    : http.createServer(app);
+    : http.createServer(app)
 
   if (!server) {
-    return null;
+    logger.info('[debug] server creation failed (no server instance)')
+    return null
   }
 
-  const protocol = userConfig.https ? 'https:' : 'http:';
-  const port = opts.port || 8000;
+  const protocol = userConfig.https ? 'https:' : 'http:'
+  const port = opts.port || 8000
+
+  logger.info(
+    `[debug] attempting to listen on ${protocol}//${
+      opts.host || '0.0.0.0'
+    }:${port}`,
+  )
 
   server.listen(port, async () => {
     if (typeof onDevCompileDone === 'function') {
@@ -138,15 +176,17 @@ export async function createServer(opts: IOpts): Promise<any> {
         isFirstCompile: true,
         // @ts-ignore
         stats: vite._optimizeDepsMetadata,
-      });
+      })
     }
 
-    const banner = getDevBanner(protocol, opts.host, port);
+    const banner = getDevBanner(protocol, opts.host, port)
 
-    console.log(banner.before);
-    logger.ready(banner.main);
-    console.log(banner.after);
-  });
+    console.log(banner.before)
+    logger.ready(banner.main)
+    console.log(banner.after)
 
-  return server;
+    logger.info('[debug] dev server started successfully')
+  })
+
+  return server
 }

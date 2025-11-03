@@ -26,6 +26,7 @@
     "test": "kmi-scripts jest-turbo"
   },
   "dependencies": {
+    "@kmijs/shared": "workspace:*",
     "@svgr/core": "6.5.1",
     "@umijs/bundler-utils": "",
     "@umijs/utils": "^4.5.3",

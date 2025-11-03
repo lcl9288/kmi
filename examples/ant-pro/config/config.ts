@@ -152,12 +152,14 @@ export default defineConfig({
   mock: {
     include: ['mock/**/*', 'src/pages/**/_mock.ts'],
   },
-  mfsu: {
-    strategy: 'normal',
-  },
+  mfsu: false,
+  // mfsu: {
+    // strategy: 'normal',
+  // },
   esbuildMinifyIIFE: true,
   requestRecord: {},
-  rspack: {},
+  // rspack: {},
+  vite6:{},
   transformImport: [
     {
       libraryName: 'antd',

@@ -10,8 +10,6 @@ import { CORE_JS_DIR } from '../../constants'
 import { bundlerRspack, bundlerVite } from '../../utils/bundler'
 import { prettyTime } from '../../utils/prettyTime'
 import { applyCheckConfig } from './checkConfig'
-import { applyIncremental } from './incremental'
-import { applyLazyCompilation } from './lazyCompilation'
 
 export default (api: IApi) => {
   api.describe({
@@ -56,7 +54,7 @@ export default (api: IApi) => {
   // })
 
   api.modifyAppData((memo) => {
-    memo.bundler = BundlerTypeEnum.vite
+    memo.bundler = BundlerTypeEnum.vite6
     memo.viteVersion = bundlerVite.version
     memo.bundlerInfo = {
       ...memo.bundlerInfo,
@@ -106,9 +104,7 @@ export default (api: IApi) => {
     return memo
   })
 
-  applyLazyCompilation(api)
   applyCheckConfig(api)
-  applyIncremental(api)
 }
 
 const printTime = (c: StatsCompilation) => {

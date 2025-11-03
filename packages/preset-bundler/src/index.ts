@@ -18,6 +18,7 @@ export default (api: IApi) => {
       require.resolve('./features/codeSplitting/codeSplitting'),
       require.resolve('./features/removeConsole/removeConsole'),
       require.resolve('./features/transformImport/transformImport'),
+      require.resolve('./features/vite/vite'),
       // plugins
       require.resolve('@kmijs/plugin-svgr'),
 

@@ -15,7 +15,7 @@ export default (api: IApi) => {
   api.modifyUniBundler((_, { bundler }) => {
     return bundler === BundlerTypeEnum.rspack
       ? bundlerRspack
-      : bundler === BundlerTypeEnum.vite
+      : bundler === BundlerTypeEnum.vite6
       ? bundlerVite
       : bundlerWebpack
   })
