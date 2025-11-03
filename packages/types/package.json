@@ -5,7 +5,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kmijs/kmi/-/tree/main/packages/types"
+    "url": "https://github.com/kmijs/kmi/tree/main/packages/types"
   },
   "license": "ISC",
   "exports": {

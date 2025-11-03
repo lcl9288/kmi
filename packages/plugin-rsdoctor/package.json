@@ -5,7 +5,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kmijs/kmi/-/tree/main/plugins/plugin-rsdoctor"
+    "url": "https://github.com/kmijs/kmi/tree/main/packages/plugin-rsdoctor"
   },
   "license": "ISC",
   "exports": {

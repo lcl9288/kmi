@@ -37,6 +37,7 @@
     "@kmijs/bundler-compiled": "workspace:*",
     "@kmijs/bundler-rspack": "workspace:*",
     "@kmijs/bundler-shared": "workspace:*",
+    "@kmijs/bundler-vite": "workspace:*",
     "@kmijs/bundler-webpack": "workspace:*",
     "@kmijs/plugin-svgr": "workspace:*",
     "@kmijs/shared": "workspace:*",

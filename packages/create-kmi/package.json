@@ -5,7 +5,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kmijs/kmi/-/tree/main/packages/create-kmi"
+    "url": "https://github.com/kmijs/kmi/tree/main/packages/create-kmi"
   },
   "license": "ISC",
   "exports": {
@@ -40,8 +40,7 @@
     "node": ">=16.10.0"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "authors": [
     "xierenyuan@qq.com"

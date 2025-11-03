@@ -5,7 +5,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kmijs/kmi/-/tree/main/plugins/plugin-code-inspector"
+    "url": "https://github.com/kmijs/kmi/tree/main/packages/plugin-code-inspector"
   },
   "license": "ISC",
   "exports": {

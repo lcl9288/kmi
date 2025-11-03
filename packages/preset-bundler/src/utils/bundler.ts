@@ -13,4 +13,7 @@ const bundlerRspack: typeof import('@kmijs/bundler-rspack') = process.env
   ? require(process.env.BUNDLER_RSPACK)
   : lazyImportFromCurrentPkg('@kmijs/bundler-rspack')
 
-export { bundlerWebpack, bundlerRspack }
+const bundlerVite: typeof import('@kmijs/bundler-vite') =
+  lazyImportFromCurrentPkg('@kmijs/bundler-vite')
+
+export { bundlerWebpack, bundlerRspack, bundlerVite }

@@ -13,6 +13,7 @@ export enum Env {
 export enum BundlerTypeEnum {
   webpack = 'webpack',
   rspack = 'rspack',
+  vite = 'vite',
 }
 
 export type BundlerType = keyof typeof BundlerTypeEnum

@@ -2,7 +2,7 @@ import type { Compiler, Configuration } from '@kmijs/bundler-rspack'
 import { pathe } from '@kmijs/shared'
 import { BundlerTypeEnum, type Env } from '@kmijs/types'
 import type { IApi } from 'umi'
-import { bundlerRspack, bundlerWebpack } from '../utils/bundler'
+import { bundlerRspack, bundlerWebpack, bundlerVite } from '../utils/bundler'
 import { getBabelOpts } from '../utils/getBabelOpts'
 import { getBundlerOpts } from '../utils/getBundlerOpts'
 import { getSwcOpts } from '../utils/rspack'
@@ -13,7 +13,11 @@ export default (api: IApi) => {
   })
 
   api.modifyUniBundler((_, { bundler }) => {
-    return bundler === BundlerTypeEnum.rspack ? bundlerRspack : bundlerWebpack
+    return bundler === BundlerTypeEnum.rspack
+      ? bundlerRspack
+      : bundler === BundlerTypeEnum.vite
+      ? bundlerVite
+      : bundlerWebpack
   })
 
   api.modifyUniBundlerOpts(async (memo, { bundler }) => {

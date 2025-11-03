@@ -5,7 +5,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kmijs/kmi/-/tree/main/plugins/plugin-svgr"
+    "url": "https://github.com/kmijs/kmi/tree/main/packages/plugin-svgr"
   },
   "license": "ISC",
   "exports": {
