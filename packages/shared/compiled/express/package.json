@@ -1,0 +1,9 @@
+{
+  "name": "@kmijs/shared-compiled-express",
+  "private": true,
+  "type": "commonjs",
+  "main": "./index.js",
+  "types": "./index.d.ts"
+}
+
+

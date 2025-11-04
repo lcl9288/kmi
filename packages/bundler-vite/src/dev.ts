@@ -1,22 +1,23 @@
-import { getConfig } from './config/config';
-import { createServer } from './server/server';
-import { Env, IBabelPlugin, IConfig } from './types';
+import { logger } from '@kmijs/shared'
+import { getConfig } from './config/config'
+import { createServer } from './server/server'
+import { Env, type IBabelPlugin, type IConfig } from './types'
 
 interface IOpts {
-  beforeBabelPlugins?: any[];
-  beforeBabelPresets?: any[];
-  afterMiddlewares?: any[];
-  beforeMiddlewares?: any[];
-  onDevCompileDone?: any;
-  port?: number;
-  host?: string;
-  cwd: string;
-  config: IConfig;
-  entry: Record<string, string>;
-  extraBabelPlugins?: IBabelPlugin[];
-  extraBabelPresets?: IBabelPlugin[];
-  modifyViteConfig?: Function;
-  onBeforeMiddleware?: Function;
+  beforeBabelPlugins?: any[]
+  beforeBabelPresets?: any[]
+  afterMiddlewares?: any[]
+  beforeMiddlewares?: any[]
+  onDevCompileDone?: any
+  port?: number
+  host?: string
+  cwd: string
+  config: IConfig
+  entry: Record<string, string>
+  extraBabelPlugins?: IBabelPlugin[]
+  extraBabelPresets?: IBabelPlugin[]
+  modifyViteConfig?: Function
+  onBeforeMiddleware?: Function
 }
 
 export async function dev(opts: IOpts) {
@@ -34,7 +35,9 @@ export async function dev(opts: IOpts) {
       ...(opts.extraBabelPresets || []),
     ],
     modifyViteConfig: opts.modifyViteConfig,
-  });
+  })
+  logger.info('[debug] userConfig ', JSON.stringify(opts))
+  logger.info('[debug] viteConfig ', JSON.stringify(viteConfig))
 
   await createServer({
     viteConfig,
@@ -42,9 +45,10 @@ export async function dev(opts: IOpts) {
     cwd: opts.cwd,
     port: opts.port,
     host: opts.host,
+    entry: opts.entry,
     beforeMiddlewares: opts.beforeMiddlewares,
     afterMiddlewares: opts.afterMiddlewares,
     onDevCompileDone: opts.onDevCompileDone,
     onBeforeMiddleware: opts.onBeforeMiddleware,
-  });
+  })
 }

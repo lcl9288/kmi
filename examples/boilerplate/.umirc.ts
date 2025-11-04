@@ -72,7 +72,7 @@ export default defineConfig({
     // externalsType: 'script',
   },
   // vite: {},
-  https: {},
+  // https: {},
   // fastRefresh: false,
   // favicon: 'https://sivers.com/favicon.ico',
   // scripts: [`console.log('script')`],
@@ -111,7 +111,8 @@ export default defineConfig({
   styles: ['//cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css'],
   esbuildMinifyIIFE: true,
   classPropertiesLoose: {},
-  rspack: {},
+  // rspack: {},
+  vite6: {},
   presets: ['@kmijs/preset-bundler'],
   codeSplitting: {
     jsStrategy: 'granularChunks'
