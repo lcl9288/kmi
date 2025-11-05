@@ -1,8 +1,4 @@
 import assert from 'node:assert'
-import type {
-  BabelConfigUtils,
-  BabelLoaderOptions,
-} from '@kmijs/bundler-rspack'
 import type { StatsCompilation } from '@kmijs/bundler-shared/rspack'
 import { fsExtra, logger, pathe, picocolors } from '@kmijs/shared'
 import { BundlerTypeEnum, type IApi } from '@kmijs/types'
@@ -101,6 +97,39 @@ export default (api: IApi) => {
     if (process.env.LOCK_CORE_JS !== 'none') {
       memo.resolve.alias.set('core-js', CORE_JS_DIR)
     }
+    return memo
+  })
+
+  api.modifyConfig((memo) => {
+    // like vite, use to pre-bundling dependencies in vite mode
+    memo.alias['@fs'] = api.cwd
+    return memo
+  })
+
+  api.modifyDefaultConfig((memo) => {
+    // vite development env disable polyfill optimise dev development experience
+    if (api.env === 'development') {
+      memo.polyfill = false
+    }
+    return memo
+  })
+
+  // include extra monorepo package deps for vite pre-bundle
+  api.modifyViteConfig((memo) => {
+    logger.info('[debug] api.appData.deps!', JSON.stringify(api.appData.deps!))
+    memo.optimizeDeps = {
+      ...(memo.optimizeDeps || {}),
+      include: memo.optimizeDeps?.include?.concat(
+        Object.values(api.appData.deps!)
+          .map(({ matches }) => matches[0])
+          .filter(
+            (item) =>
+              (item?.startsWith('@fs') && !item?.includes('node_modules')) ||
+              item?.includes('fast-deep-equal'),
+          ),
+      ),
+    }
+
     return memo
   })
 

@@ -30,7 +30,8 @@ export default function HomePage() {
       <SvgSmile />
       <div>test</div>
       <ThemeToggle />
-      <img src={`${process.env.PUBLIC_PATH}imgs/dogs.jpeg`} />
+      <img src={`imgs/dogs.jpeg`} />
+      {/* <img src={`${process.env.PUBLIC_PATH}imgs/dogs.jpeg`} /> */}
     </div>
   );
 }

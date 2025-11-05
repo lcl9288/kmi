@@ -71,7 +71,12 @@ export async function createServer(opts: IOpts): Promise<any> {
 
   const vite = await createViteServer({
     ...viteConfig,
-    logLevel: 'info',
+    server: {
+      ...viteConfigServer,
+      middlewareMode: true,
+    },
+    configFile: false,
+    appType: 'custom',
     // use `handleHotUpdate` vite hook to workaround `onDevCompileDone` umi hook
     ...(typeof onDevCompileDone === 'function'
       ? {
@@ -89,10 +94,12 @@ export async function createServer(opts: IOpts): Promise<any> {
           ]),
         }
       : {}),
-    server: { ...viteConfigServer, middlewareMode: true },
   })
 
-  logger.info('[debug] vite dev server created (middleware mode)')
+  logger.info(
+    '[debug] vite dev server created (middleware mode)',
+    opts.beforeMiddlewares,
+  )
 
   // before middlewares
   opts.beforeMiddlewares?.forEach((m) => app.use(m))
@@ -173,17 +180,17 @@ export async function createServer(opts: IOpts): Promise<any> {
         : '/src/.umi/umi.ts'
 
       const htmlTemplate = `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dev</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="${entryPath}"></script>
-  </body>
-</html>`
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Dev</title>
+    </head>
+    <body>
+      <div id="root"></div>
+      <script type="module" src="${entryPath}"></script>
+    </body>
+  </html>`
       const html = await vite.transformIndexHtml(url, htmlTemplate)
       res.setHeader('Content-Type', 'text/html')
       res.status(200).end(html)
@@ -210,7 +217,7 @@ export async function createServer(opts: IOpts): Promise<any> {
     }:${port}`,
   )
 
-  app.listen(port, async () => {
+  server.listen(port, async () => {
     if (typeof onDevCompileDone === 'function') {
       await onDevCompileDone({
         time: +new Date() - startTms,
@@ -229,5 +236,5 @@ export async function createServer(opts: IOpts): Promise<any> {
     logger.info('[debug] dev server started successfully')
   })
 
-  return app
+  return server
 }

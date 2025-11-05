@@ -160,6 +160,7 @@ export default defineConfig({
   requestRecord: {},
   // rspack: {},
   vite6:{},
+  // vite:{},
   transformImport: [
     {
       libraryName: 'antd',
