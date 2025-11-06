@@ -3,5 +3,6 @@ export default {
   plugins: [require.resolve('@kmijs/plugin-code-inspector')],
   codeInspector: {
   },
-  rspack: {}
+  // rspack: {}
+  vite6:{},
 }

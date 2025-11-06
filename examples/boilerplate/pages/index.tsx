@@ -23,12 +23,12 @@ export default function HomePage() {
 
   return (
     <div className={styles.title}>
-      HomePage
+      HomePage12
       <div>count: {count}</div>
       <div className={styles.smile}></div>
       <img src={Smileurl} alt="" />
       <SvgSmile />
-      <div>test</div>
+      <div>test121</div>
       <ThemeToggle />
       <img src={`imgs/dogs.jpeg`} />
       {/* <img src={`${process.env.PUBLIC_PATH}imgs/dogs.jpeg`} /> */}
