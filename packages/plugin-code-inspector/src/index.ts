@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type { IApi } from '@kmijs/types'
+import { BundlerTypeEnum, type IApi } from '@kmijs/types'
 
 export default (api: IApi) => {
   api.describe({
@@ -24,7 +24,10 @@ export default (api: IApi) => {
     const CodeInspectorPlugin = require('../compiled/webpack-code-inspector-plugin')
     memo.plugin('code-inspector-plugin').use(CodeInspectorPlugin, [
       {
-        bundler: api.appData.bundler,
+        bundler:
+          api.appData.bundler === BundlerTypeEnum.vite6
+            ? 'vite'
+            : api.appData.bundler,
         close: false,
         output: path.resolve(__dirname, './'),
         ...api.config.codeInspector,
