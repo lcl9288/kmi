@@ -57,7 +57,8 @@ export default defineConfig({
   headScripts: [
     'https://gw.alipayobjects.com/os/lib/marked/2.0.0/marked.min.js',
     'https://gw.alipayobjects.com/os/lib/antv/g2/3.5.19/dist/g2.min.js',
-    'https://gw.alipayobjects.com/os/lib/antv/g6/4.1.16/dist/g6.min.js',
+    // 'https://gw.alipayobjects.com/os/lib/antv/g6/4.1.16/dist/g6.min.js',
+    'https://unpkg.com/@antv/g6@5.0.50/dist/g6.min.js',
     `console.log('head script')`
   ],
   externals: {

@@ -15,7 +15,7 @@ import {
   type MultiCompiler,
   rspack,
 } from '@kmijs/bundler-shared/rspack'
-import { webpackMerge } from '@kmijs/shared'
+import { logger, webpackMerge } from '@kmijs/shared'
 import type { IConfig, IExtraRspackOpts } from './types'
 
 interface IEnvironment {
@@ -81,6 +81,8 @@ export class RspackBundler extends BaseBundler<IConfig, IOpts> {
 
       await Promise.all(pAll)
     }
+    logger.info('[debug] opts', JSON.stringify(opts))
+    logger.info('[debug] bundlerConfigs', JSON.stringify(bundlerConfigs))
 
     return bundlerConfigs
   }

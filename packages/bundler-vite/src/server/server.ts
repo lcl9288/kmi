@@ -161,44 +161,6 @@ export async function createServer(opts: IOpts): Promise<any> {
   // prerender
   // bundless
 
-  // 为无物理 index.html 的项目（如 Umi）提供 HTML 兜底
-  app.use('*', async (req, res, next) => {
-    try {
-      const url = req.originalUrl || '/'
-      const firstEntry = opts.entry && Object.values(opts.entry)[0]
-      const entryPath = firstEntry
-        ? (() => {
-            if (path.isAbsolute(firstEntry)) {
-              const rel = path
-                .relative(opts.cwd, firstEntry)
-                .split(path.sep)
-                .join('/')
-              return `/${rel}`
-            }
-            return firstEntry
-          })()
-        : '/src/.umi/umi.ts'
-
-      const htmlTemplate = `<!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Dev</title>
-    </head>
-    <body>
-      <div id="root"></div>
-      <script type="module" src="${entryPath}"></script>
-    </body>
-  </html>`
-      const html = await vite.transformIndexHtml(url, htmlTemplate)
-      res.setHeader('Content-Type', 'text/html')
-      res.status(200).end(html)
-    } catch (e) {
-      next(e)
-    }
-  })
-
   const server = userConfig.https
     ? await createHttpsServer(app, userConfig.https)
     : http.createServer(app)

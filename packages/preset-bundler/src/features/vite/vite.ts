@@ -68,6 +68,26 @@ export default (api: IApi) => {
     }
   })
 
+  api.modifyUniBundlerOpts(async (memo, { bundler }) => {
+    const modifyViteConfig = async (memo: any, args: any) => {
+      return await api.applyPlugins({
+        key: 'modifyViteConfig',
+        initialValue: memo,
+        args,
+      })
+    }
+    memo.modifyViteConfig = modifyViteConfig
+    // 参考umi，在vite6启用时，禁用babel webpack相关配置umi/packages/preset-umi/src/commands/dev/dev.ts
+    // vite6启用时，禁用babel webpack相关配置
+    memo.babbelPreset = undefined
+    memo.chainWebpack = undefined
+    memo.modifyWebpackConfig = undefined
+
+    // memo.afterMiddlewares = []
+
+    return memo
+  })
+
   api.onBuildComplete(({ err, stats }) => {
     const hasErrors = stats.hasErrors()
     if (!err && !hasErrors) {
@@ -93,6 +113,17 @@ export default (api: IApi) => {
     }
   })
 
+  api.register({
+    key: 'onBeforeCompiler',
+    stage: Number.POSITIVE_INFINITY,
+    async fn() {
+      await api.applyPlugins({
+        key: 'updateAppDataDeps',
+        type: api.ApplyPluginsType.event,
+      })
+    },
+  })
+
   api.bundlerChain((memo) => {
     if (process.env.LOCK_CORE_JS !== 'none') {
       memo.resolve.alias.set('core-js', CORE_JS_DIR)
@@ -111,12 +142,13 @@ export default (api: IApi) => {
     if (api.env === 'development') {
       memo.polyfill = false
     }
+
     return memo
   })
 
   // include extra monorepo package deps for vite pre-bundle
   api.modifyViteConfig((memo) => {
-    logger.info('[debug] api.appData.deps!', JSON.stringify(api.appData.deps!))
+    logger.info('[debug] api.appData.deps!', JSON.stringify(api.appData))
     memo.optimizeDeps = {
       ...(memo.optimizeDeps || {}),
       include: memo.optimizeDeps?.include?.concat(
@@ -124,11 +156,11 @@ export default (api: IApi) => {
           .map(({ matches }) => matches[0])
           .filter(
             (item) =>
-              (item?.startsWith('@fs') && !item?.includes('node_modules')) ||
-              item?.includes('fast-deep-equal'),
+              item?.startsWith('@fs') && !item?.includes('node_modules'),
           ),
       ),
     }
+    // memo.plugins?.push(ViteHtmlPlugin(api))
 
     return memo
   })
