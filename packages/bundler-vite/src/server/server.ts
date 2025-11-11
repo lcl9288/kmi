@@ -57,6 +57,9 @@ export async function createServer(opts: IOpts): Promise<any> {
     )}, https=${Boolean(userConfig.https)}`,
   )
 
+  const protocol = userConfig.https ? 'https:' : 'http:'
+  const port = opts.port || 8000
+
   // 如果启用https 先获取key 和 cert 给vite ws 服务使用
   if (userConfig.https) {
     const httpsConfig = await resolveHttpsConfig(userConfig.https)
@@ -71,20 +74,11 @@ export async function createServer(opts: IOpts): Promise<any> {
 
   const vite = await createViteServer({
     ...viteConfig,
-    server: {
-      ...viteConfigServer,
-      middlewareMode: true,
-    },
-    configFile: false,
-    appType: 'custom',
     // use `handleHotUpdate` vite hook to workaround `onDevCompileDone` umi hook
     ...(typeof onDevCompileDone === 'function'
       ? {
           plugins: viteConfig.plugins!.concat([
             pluginOnHotUpdate(async (modules) => {
-              logger.info(
-                `[debug] onHotUpdate received: modules=${modules?.length ?? 0}`,
-              )
               await onDevCompileDone({
                 time: 0,
                 isFirstCompile: false,
@@ -169,9 +163,6 @@ export async function createServer(opts: IOpts): Promise<any> {
     logger.info('[debug] server creation failed (no server instance)')
     return null
   }
-
-  const protocol = userConfig.https ? 'https:' : 'http:'
-  const port = opts.port || 8000
 
   logger.info(
     `[debug] attempting to listen on ${protocol}//${

@@ -8,6 +8,9 @@ export default function handleHotUpdate(
     apply: 'serve',
     async handleHotUpdate(ctx: HmrContext) {
       await listener(ctx.modules);
+      // 返回受影响的模块，让 Vite 继续处理 HMR
+      // 如果不返回，Vite 会触发 full-reload
+      return ctx.modules;
     },
   };
 }

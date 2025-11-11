@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default () => {
+export default function UsersFoo() {
   return (
     <div>
-      <h2>Users Foo Page</h2>
+      <h2>Users Foo Page1</h2>
     </div>
   );
 };

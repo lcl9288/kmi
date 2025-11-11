@@ -36,6 +36,12 @@ export async function dev(opts: IOpts) {
     ],
     modifyViteConfig: opts.modifyViteConfig,
   })
+
+  viteConfig.server = {
+    ...(viteConfig.server || {}),
+    middlewareMode: true,
+    hmr: true,
+  }
   logger.info('[debug] userConfig ', JSON.stringify(opts))
   logger.info('[debug] viteConfig ', JSON.stringify(viteConfig))
 
