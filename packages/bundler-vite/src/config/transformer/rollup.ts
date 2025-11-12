@@ -1,11 +1,11 @@
-import type { IConfig } from '@umijs/bundler-webpack/dist/types';
-import path from 'path';
+import type { IConfig } from '@umijs/bundler-webpack/dist/types'
+import path from 'node:path'
 import {
   visualizer,
   type PluginVisualizerOptions,
-} from 'rollup-plugin-visualizer';
-import type { IConfigProcessor } from '.';
-import copy from '../../../compiled/rollup-plugin-copy';
+} from 'rollup-plugin-visualizer'
+import type { IConfigProcessor } from '.'
+import copy from '../../../compiled/rollup-plugin-copy'
 
 /**
  * transform umi configs to vite rollup options
@@ -17,8 +17,16 @@ import copy from '../../../compiled/rollup-plugin-copy';
  */
 export default (function rollup(userConfig) {
   const config: ReturnType<IConfigProcessor> = {
-    build: { rollupOptions: { plugins: [], output: {} } },
-  };
+    build: {
+      rollupOptions: {
+        plugins: [],
+        output: {
+          // 设置输出格式为 IIFE，确保浏览器可以直接执行
+          format: 'iife',
+        },
+      },
+    },
+  }
 
   // handle analyze
   if (typeof userConfig.analyze === 'object' || process.env.ANALYZE) {
@@ -30,26 +38,26 @@ export default (function rollup(userConfig) {
       excludeAssets,
       ...analyzeOverrides
     } = (userConfig.analyze || {}) as PluginVisualizerOptions &
-      IConfig['analyze'];
+      IConfig['analyze']
 
     function getExclude(): PluginVisualizerOptions['exclude'] {
-      if (!excludeAssets) return [];
+      if (!excludeAssets) return []
       const excludes = Array.isArray(excludeAssets)
         ? excludeAssets
-        : [excludeAssets];
+        : [excludeAssets]
       return (
         excludes
           .filter((exclude) => {
-            return typeof exclude === 'string';
+            return typeof exclude === 'string'
           })
           // @ts-ignore
           .map((exclude: string) => {
             return {
               bundle: exclude,
               file: exclude,
-            };
+            }
           })
-      );
+      )
     }
 
     // @ts-ignore
@@ -64,7 +72,7 @@ export default (function rollup(userConfig) {
         title: reportTitle as string | undefined,
         ...analyzeOverrides,
       }),
-    );
+    )
   }
 
   // handle copy
@@ -78,19 +86,18 @@ export default (function rollup(userConfig) {
             return {
               src: item,
               dest: userConfig.outputPath || 'dist',
-            };
-          } else {
-            // transform fields
-            return {
-              src: item.from,
-              dest: path.dirname(item.to),
-              rename: path.basename(item.to),
-            };
+            }
+          }
+          // transform fields
+          return {
+            src: item.from,
+            dest: path.dirname(item.to),
+            rename: path.basename(item.to),
           }
         }),
         hook: 'writeBundle',
       }),
-    );
+    )
   }
 
   // handle hash
@@ -101,8 +108,8 @@ export default (function rollup(userConfig) {
       entryFileNames: '[name].js',
       chunkFileNames: '[name].js',
       assetFileNames: '[name].[ext]',
-    });
+    })
   }
 
-  return config;
-} as IConfigProcessor);
+  return config
+} as IConfigProcessor)

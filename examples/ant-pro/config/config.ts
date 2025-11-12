@@ -1,6 +1,6 @@
 // https://umijs.org/config/
 import { defineConfig } from '@umijs/max';
-import { join } from 'path';
+import { join,resolve } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 
@@ -159,7 +159,23 @@ export default defineConfig({
   esbuildMinifyIIFE: true,
   requestRecord: {},
   // rspack: {},
-  vite6:{},
+  vite6:{
+    resolve: {
+      alias: [
+        // 重写任何指向 CJS 入口 fast-deep-equal/index.js 的绝对路径到 ESM 入口
+        {
+          find: /.*fast-deep-equal\/index\.js$/,
+          replacement: 'fast-deep-equal',
+        },
+      ],
+    },
+    optimizeDeps: {
+      include: ['fast-deep-equal','lodash/camelCase'],  // 让 esbuild 预构建 ESM 入口
+    },
+  },
+  // alias:{
+  //   [resolve('fast-deep-equal')]: resolve(__dirname, '../node_modules/fast-deep-equal/es6/index.js'),
+  // },
   // vite:{},
   transformImport: [
     {

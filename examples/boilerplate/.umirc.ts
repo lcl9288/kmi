@@ -119,4 +119,8 @@ export default defineConfig({
     jsStrategy: 'granularChunks'
   },
   ...extraConfig,
+  define:{
+    'FOO': 'bar',
+  },
+  esbuildMinifyIIFE: true
 });

@@ -14,7 +14,7 @@ export function applyCheckConfig(api: IApi) {
     unsupportedKeys.forEach((key) => {
       if (api.userConfig[key]) {
         throw new Error(
-          `rspack does not support the ${picocolors.red(
+          `Vite6 does not support the ${picocolors.red(
             key,
           )} configuration item`,
         )
@@ -27,7 +27,7 @@ export function applyCheckConfig(api: IApi) {
       if (api.userConfig[key]) {
         logger.warn(
           picocolors.yellow(
-            `Rspack mode enabled ${key} configuration references additional babel compilation, which will affect build performance. Please use with caution`,
+            `Vite6 mode enabled ${key} configuration references additional babel compilation, which will affect build performance. Please use with caution`,
           ),
         )
       }
@@ -40,7 +40,7 @@ export function applyCheckConfig(api: IApi) {
     riskyKeys.forEach((key) => {
       if (lodash.get(api.userConfig, key)) {
         warningKeys.push(
-          `Rspack mode does not support configuration item ${key
+          `vite6 mode does not support configuration item ${key
             .split('.')
             .pop()}`,
         )
@@ -79,7 +79,7 @@ export function applyCheckConfig(api: IApi) {
          ░░░   ░░░      ░░░░░   ░░░░░ ░░░░░   ░░░░░ ░░░░░    ░░░░░ ░░░░░ ░░░░░    ░░░░░   ░░░░░░░░░
 
 
-    Kmi Rspack mode does not support the following configuration items:
+    Kmi Vite6 mode does not support the following configuration items:
       - ${warningKeys.join('\n    - ')}
 
     Unsupported configurations may cause the project to fail to compile or run at runtime. Please ${picocolors.bold(

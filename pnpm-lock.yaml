@@ -337,6 +337,9 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.13
+      fast-deep-equal:
+        specifier: ^3.1.3
+        version: 3.1.3
       numeral:
         specifier: ^2.0.6
         version: 2.0.6
@@ -851,6 +854,9 @@ importers:
       rollup-plugin-visualizer:
         specifier: ^5.12.0
         version: 5.14.0(rollup@4.41.0)
+      rollup-plugin-webpack-stats:
+        specifier: ^2.0.0
+        version: 2.1.7(rollup@4.41.0)(vite@6.4.1)
       systemjs:
         specifier: ^6.14.1
         version: 6.15.1
@@ -27300,6 +27306,25 @@ packages:
       '@babel/code-frame': 7.27.1
     dev: true
 
+  /rollup-plugin-stats@1.5.2(rollup@4.41.0)(vite@6.4.1):
+    resolution: {integrity: sha512-3PtTLkgJ9zDaBITh92sysBxpaIJHSokODV4eo6ivnxfzDZxFPpTPooWHPse/X/Qi9A186Opu+hPycZNPxSgtnA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      rolldown: ^1.0.0-beta.0
+      rollup: ^3.0.0 || ^4.0.0
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0
+    peerDependenciesMeta:
+      rolldown:
+        optional: true
+      rollup:
+        optional: true
+      vite:
+        optional: true
+    dependencies:
+      rollup: 4.41.0
+      vite: 6.4.1(@types/node@20.8.9)(less@4.1.3)(tsx@4.19.4)
+    dev: false
+
   /rollup-plugin-visualizer@5.14.0(rollup@4.41.0):
     resolution: {integrity: sha512-VlDXneTDaKsHIw8yzJAFWtrzguoJ/LnQ+lMpoVfYJ3jJF4Ihe5oYLAqLklIK/35lgUY+1yEzCkHyZ1j4A5w5fA==}
     engines: {node: '>=18'}
@@ -27334,6 +27359,26 @@ packages:
       picomatch: 2.3.1
       source-map: 0.7.4
       yargs: 17.7.2
+
+  /rollup-plugin-webpack-stats@2.1.7(rollup@4.41.0)(vite@6.4.1):
+    resolution: {integrity: sha512-hg+lhXu/lOp+k9SR7Xi47+s/YJyYnSSfE7h3iuqwDthaFwxYRw9cztd7HLXrwDgW18CC1L7n9ueZBr/Te2BWUw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      rolldown: ^1.0.0-beta.0
+      rollup: ^3.0.0 || ^4.0.0
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0
+    peerDependenciesMeta:
+      rolldown:
+        optional: true
+      rollup:
+        optional: true
+      vite:
+        optional: true
+    dependencies:
+      rollup: 4.41.0
+      rollup-plugin-stats: 1.5.2(rollup@4.41.0)(vite@6.4.1)
+      vite: 6.4.1(@types/node@20.8.9)(less@4.1.3)(tsx@4.19.4)
+    dev: false
 
   /rollup@3.29.5:
     resolution: {integrity: sha512-GVsDdsbJzzy4S/v3dqWPJ7EfvZJfCHiDqe80IyrF59LYuP+e6U1LJoUqeuqRbwAWoMNoXivMNeNAOf5E22VA1w==}
